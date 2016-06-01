@@ -11,11 +11,11 @@ main =
 
 
 -- MODEL
-type alias Model = { attempt : String }
+type alias Model = { attempt : String, verse : String }
 
 model : Model
 model =
-  Model ""
+  Model "" "In the beginning"
 
 
 -- UPDATE
@@ -48,10 +48,12 @@ viewValidation : Model -> Html msg
 viewValidation model =
   let
     (cls, message) =
-      if String.contains model.attempt "In the beginning" then
-        ("text-success", "OK")
+      if model.attempt == model.verse then
+        ("text-success", "Correct!!")
+      else if String.contains model.attempt model.verse then
+        ("", "OK so far ...")
       else
-        ("text-danger", "Nope")
+        ("text-danger", "Incorrect")
   in
     div [ class cls ] [ text message ]
 
