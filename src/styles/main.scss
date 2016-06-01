@@ -1,5 +1,10 @@
+@import url(https://fonts.googleapis.com/css?family=Lato);
+
 $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
 // can add Boostrap overrides, additional Sass/CSS below...
+.main h1 {
+  padding: 10px 0px;
+}
