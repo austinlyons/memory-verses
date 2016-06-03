@@ -3,6 +3,8 @@ import Html.Attributes exposing (..)
 import Html.App as Html
 import Html.Events exposing ( onClick, onInput )
 import String
+import Dict
+import Maybe
 
 -- APP
 main : Program Never
@@ -11,22 +13,50 @@ main =
 
 
 -- MODEL
-type alias Model = { attempt : String, verse : String }
+type alias Model = { attempt : String, idx : Int }
 
 model : Model
 model =
-  Model "" "In the beginning"
+  Model "" 1
+
+-- verses to memorize
+type alias Entry = { verse : String, text : String, translation : String }
+versesList =
+  [ (0, Entry "Romans 3:23" "For all have sinned and fall short of the glory of God" "ESV" )
+  , (1, Entry "Romans 6:23" "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord" "ESV" )
+  ]
+
+-- look up table (integer indexed dictionary)
+verses = Dict.fromList(versesList)
+
+getEntryText :  Maybe Entry -> String
+getEntryText entry =
+  case entry of
+    Just entry -> entry.text
+    Nothing -> ""
 
 
 -- UPDATE
 type Msg
   = Attempt String
+  | Next
+  | Back
 
 update : Msg -> Model -> Model
 update msg model =
-  case msg of
-    Attempt attempt ->
-      { model | attempt = attempt }
+  let
+    len = List.length versesList
+    _ = Debug.log "model" model.idx -- write to console.log
+  in
+    case msg of
+      Attempt attempt ->
+        { model | attempt = attempt }
+
+      Next ->
+        { model | idx = (model.idx + 1) % len }
+
+      Back ->
+        { model | idx = (model.idx - 1) % len }
 
 
 -- VIEW
@@ -39,7 +69,9 @@ view model =
       div [ class "col-md-12" ][
         h1 [][ text "Memory Verses" ],
         textarea [ rows 4, cols 80, placeholder "Type verse here", onInput Attempt ] [],
-        viewValidation model
+        viewValidation model,
+        button [ onClick Back ] [ text "back" ],
+        button [ onClick Next ] [ text "next" ]
       ]
     ]
   ]
@@ -47,15 +79,16 @@ view model =
 viewValidation : Model -> Html msg
 viewValidation model =
   let
+    txt = getEntryText (Dict.get model.idx verses)
     (cls, message) =
-      if model.attempt == model.verse then
+      if model.attempt == txt then
         ("text-success", "Correct!!")
-      else if String.contains model.attempt model.verse then
+      else if String.contains model.attempt txt then
         ("", "OK so far ...")
       else
         ("text-danger", "Incorrect")
   in
-    div [ class cls ] [ text message ]
+    div [ class cls ] [ text message]
 
 -- view model =
 --   div [ class "container", style [("margin-top", "30px"), ( "text-align", "center" )] ][    -- inline CSS (literal)
