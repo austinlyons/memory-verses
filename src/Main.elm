@@ -35,6 +35,11 @@ getEntryText entry =
     Just entry -> entry.text
     Nothing -> ""
 
+getEntryVerse :  Maybe Entry -> String
+getEntryVerse entry =
+  case entry of
+    Just entry -> entry.verse
+    Nothing -> ""
 
 -- UPDATE
 type Msg
@@ -64,17 +69,23 @@ update msg model =
 -- CSS can be applied via class names or inline style attrib
 view : Model -> Html Msg
 view model =
-  div [ class "container-fluid text-center main" ][
-    div [ class "row"][
-      div [ class "col-md-12" ][
-        h1 [][ text "Memory Verses" ],
-        textarea [ rows 4, cols 80, placeholder "Type verse here", onInput Attempt ] [],
-        viewValidation model,
-        button [ onClick Back ] [ text "back" ],
-        button [ onClick Next ] [ text "next" ]
+  let
+    currentVerse = getEntryVerse (Dict.get model.idx verses)
+  in
+    div [ class "container-fluid text-center main" ][
+      div [ class "row"][
+        div [ class "col-md-12" ][
+          h1 [][ text "Memory Verses" ],
+          h3 [][ text currentVerse ],
+          textarea [ rows 4, cols 80, placeholder "Type verse here", onInput Attempt ] [],
+          viewValidation model,
+          div [] [
+            button [ onClick Back ] [ text "back" ],
+            button [ onClick Next ] [ text "next" ]
+          ]
+        ]
       ]
     ]
-  ]
 
 viewValidation : Model -> Html msg
 viewValidation model =
@@ -84,7 +95,7 @@ viewValidation model =
       if model.attempt == txt then
         ("text-success", "Correct!!")
       else if String.contains model.attempt txt then
-        ("", "OK so far ...")
+        ("text-ok", "OK so far ...")
       else
         ("text-danger", "Incorrect")
   in
