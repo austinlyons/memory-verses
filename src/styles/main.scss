@@ -11,7 +11,9 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 
 .main {
   h1, textarea { margin: 20px 0px; }
-  button { margin: 20px; }
+  button { margin: 0 5px; }
+  a { margin-left: 10px; }
   textarea { padding: 10px; }
   .status { font-size: 16px; }
+  .inputs { margin-top: 20px; }
 }

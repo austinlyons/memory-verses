@@ -17,13 +17,16 @@ type alias Model = { attempt : String, idx : Int }
 
 model : Model
 model =
-  Model "" 1
+  Model "" 0
 
 -- verses to memorize
 type alias Entry = { verse : String, text : String, translation : String }
 versesList =
   [ (0, Entry "Romans 3:23" "For all have sinned and fall short of the glory of God" "ESV" )
-  , (1, Entry "Romans 6:23" "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord" "ESV" )
+  , (1, Entry "Romans 6:23" "for the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord" "ESV" )
+  , (2, Entry "Romans 5:8" "but God shows his love for us in that while we were still sinners, Christ died for us" "ESV")
+  , (3, Entry "Romans 10:9" "if you confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved" "ESV")
+  , (4, Entry "Romans 8:1" "There is therefore now no condemnation for those who are in Christ Jesus" "ESV")
   ]
 
 -- look up table (integer indexed dictionary)
@@ -46,6 +49,7 @@ type Msg
   = Attempt String
   | Next
   | Back
+  | Show
 
 update : Msg -> Model -> Model
 update msg model =
@@ -69,6 +73,12 @@ update msg model =
             attempt = ""
         }
 
+      Show ->
+        { model |
+            attempt = getEntryText (Dict.get model.idx verses)
+        }
+
+
 -- VIEW
 -- Html is defined as: elem [ attribs ][ children ]
 -- CSS can be applied via class names or inline style attrib
@@ -84,9 +94,10 @@ view model =
           h3 [][ text currentVerse ],
           textarea [ rows 4, cols 80, placeholder "Type verse here",  value model.attempt, onInput Attempt ] [],
           viewValidation model,
-          div [] [
+          div [ class "inputs" ] [
             button [ onClick Back ] [ text "back" ],
-            button [ onClick Next ] [ text "next" ]
+            button [ onClick Next ] [ text "next" ],
+            a [ onClick Show ] [ text "show" ]
           ]
         ]
       ]
@@ -99,7 +110,7 @@ viewValidation model =
     attempt = String.toLower model.attempt
     (cls, message) =
       if attempt == actual then
-        ("status text-success", "Correct!!")
+        ("status text-success", "Correct!")
       else if String.startsWith attempt actual then
         ("status text-ok", "OK so far ...")
       else
