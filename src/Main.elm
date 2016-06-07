@@ -3,14 +3,12 @@ import Html.Attributes exposing (..)
 import Html.App as Html
 import Html.Events exposing ( onClick, onInput )
 import String
-import Dict
-import Maybe
+import Verses exposing ( versesList, entryText, entryVerse, entryById )
 
 -- APP
 main : Program Never
 main =
   Html.beginnerProgram { model = model, view = view, update = update }
-
 
 -- MODEL
 type alias Model = { attempt : String, idx : Int }
@@ -18,31 +16,6 @@ type alias Model = { attempt : String, idx : Int }
 model : Model
 model =
   Model "" 0
-
--- verses to memorize
-type alias Entry = { verse : String, text : String, translation : String }
-versesList =
-  [ (0, Entry "Romans 3:23" "For all have sinned and fall short of the glory of God" "ESV" )
-  , (1, Entry "Romans 6:23" "for the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord" "ESV" )
-  , (2, Entry "Romans 5:8" "but God shows his love for us in that while we were still sinners, Christ died for us" "ESV")
-  , (3, Entry "Romans 10:9" "if you confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved" "ESV")
-  , (4, Entry "Romans 8:1" "There is therefore now no condemnation for those who are in Christ Jesus" "ESV")
-  ]
-
--- look up table (integer indexed dictionary)
-verses = Dict.fromList(versesList)
-
-getEntryText :  Maybe Entry -> String
-getEntryText entry =
-  case entry of
-    Just entry -> entry.text
-    Nothing -> ""
-
-getEntryVerse :  Maybe Entry -> String
-getEntryVerse entry =
-  case entry of
-    Just entry -> entry.verse
-    Nothing -> ""
 
 -- UPDATE
 type Msg
@@ -75,7 +48,7 @@ update msg model =
 
       Show ->
         { model |
-            attempt = getEntryText (Dict.get model.idx verses)
+            attempt = entryText (entryById model.idx)
         }
 
 
@@ -85,7 +58,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
   let
-    currentVerse = getEntryVerse (Dict.get model.idx verses)
+    currentVerse = entryVerse (entryById model.idx)
   in
     div [ class "container-fluid text-center main" ][
       div [ class "row"][
@@ -106,7 +79,7 @@ view model =
 viewValidation : Model -> Html msg
 viewValidation model =
   let
-    actual = String.toLower (getEntryText (Dict.get model.idx verses))
+    actual = String.toLower (entryText (entryById model.idx))
     attempt = String.toLower model.attempt
     (cls, message) =
       if attempt == actual then
