@@ -9,10 +9,11 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
   h1, textarea { margin: 20px 0px; }
   button { margin: 0 5px; }
   a { margin-left: 10px; }
-  textarea { padding: 10px; }
+  textarea { padding: 10px; margin: 10px 0px 0px 0px; }
   .status { font-size: 16px; }
   .inputs { margin-top: 20px; }
-  .text-ok { color: #acacac; }
+  .text-ok { color: #7D7D7D; }
+  .counter { margin-bottom: 10px; color: #7D7D7D; }
 }
 
 @media (max-width: 768px) {

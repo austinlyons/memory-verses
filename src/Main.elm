@@ -59,7 +59,10 @@ view model =
   let
     entry = entryById model.idx
     verse = entryVerse entry
+    actual = entryText entry
     trans = entryTranslation entry
+    attemptLen = toString (String.length model.attempt)
+    actualLen = toString (String.length actual)
   in
     div [ class "container-fluid text-center main" ][
       div [ class "row"][
@@ -67,6 +70,7 @@ view model =
           h1 [][ text "Memory Verses" ],
           h3 [][ text (verse ++ " " ++ trans)],
           textarea [ rows 4, cols 80, placeholder "Type verse here",  value model.attempt, onInput Attempt ] [],
+          div [ class "counter" ][ text (attemptLen ++ "/" ++ actualLen) ], -- twitter style counter
           viewValidation model,
           div [ class "inputs" ] [
             button [ onClick Back ] [ text "back" ],
