@@ -1,4 +1,4 @@
-module Verses exposing (..)
+module Verses exposing (versesCount, entryById, entryText, entryVerse, entryTranslation)
 
 import Dict
 import Maybe
@@ -19,6 +19,9 @@ versesList =
 verses : Dict.Dict Int Entry
 verses = Dict.fromList(versesList)
 
+versesCount : Int
+versesCount = List.length versesList
+
 entryById : Int -> Maybe Entry
 entryById idx =
   Dict.get idx verses
@@ -34,4 +37,10 @@ entryVerse :  Maybe Entry -> String
 entryVerse entry =
   case entry of
     Just entry -> entry.verse
+    Nothing -> ""
+
+entryTranslation : Maybe Entry -> String
+entryTranslation entry =
+  case entry of
+    Just entry -> entry.translation
     Nothing -> ""

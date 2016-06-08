@@ -3,7 +3,7 @@ import Html.Attributes exposing (..)
 import Html.App as Html
 import Html.Events exposing ( onClick, onInput )
 import String
-import Verses exposing ( versesList, entryText, entryVerse, entryById )
+import Verses exposing ( versesCount, entryText, entryVerse, entryById, entryTranslation )
 
 -- APP
 main : Program Never
@@ -27,8 +27,7 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
   let
-    len = List.length versesList
-    -- _ = Debug.log "model" model.idx -- write to console.log
+    _ = Debug.log "model" model -- write to console.log
   in
     case msg of
       Attempt attempt ->
@@ -36,13 +35,13 @@ update msg model =
 
       Next ->
         { model |
-            idx = (model.idx + 1) % len,
+            idx = (model.idx + 1) % versesCount,
             attempt = "" -- clear textarea
         }
 
       Back ->
         { model |
-            idx = (model.idx - 1) % len,
+            idx = (model.idx - 1) % versesCount,
             attempt = ""
         }
 
@@ -58,13 +57,15 @@ update msg model =
 view : Model -> Html Msg
 view model =
   let
-    currentVerse = entryVerse (entryById model.idx)
+    entry = entryById model.idx
+    verse = entryVerse entry
+    trans = entryTranslation entry
   in
     div [ class "container-fluid text-center main" ][
       div [ class "row"][
         div [ class "col-md-12" ][
           h1 [][ text "Memory Verses" ],
-          h3 [][ text currentVerse ],
+          h3 [][ text (verse ++ " " ++ trans)],
           textarea [ rows 4, cols 80, placeholder "Type verse here",  value model.attempt, onInput Attempt ] [],
           viewValidation model,
           div [ class "inputs" ] [

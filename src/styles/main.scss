@@ -5,10 +5,6 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
 // can add Boostrap overrides, additional Sass/CSS below...
-.text-ok {
-  color: #acacac;
-}
-
 .main {
   h1, textarea { margin: 20px 0px; }
   button { margin: 0 5px; }
@@ -16,4 +12,9 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
   textarea { padding: 10px; }
   .status { font-size: 16px; }
   .inputs { margin-top: 20px; }
+  .text-ok { color: #acacac; }
+}
+
+@media (max-width: 768px) {
+  textarea { width: 300px; height: 150px; }
 }
