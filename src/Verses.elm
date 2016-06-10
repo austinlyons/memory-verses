@@ -26,7 +26,7 @@ entryById : Int -> Maybe Entry
 entryById idx =
   Dict.get idx verses
 
--- seems like the compiler likes these, feels weird though, I think I'm missing something
+--- "getters"... seems like the compiler likes these, feels weird though, I think I'm missing something
 entryText :  Maybe Entry -> String
 entryText entry =
   case entry of

@@ -23,6 +23,7 @@ type Msg
   | Next
   | Back
   | Show
+  | Clear
 
 update : Msg -> Model -> Model
 update msg model =
@@ -50,48 +51,103 @@ update msg model =
             attempt = entryText (entryById model.idx)
         }
 
+      Clear ->
+        { model |
+            attempt = ""
+        }
 
 -- VIEW
--- Html is defined as: elem [ attribs ][ children ]
--- CSS can be applied via class names or inline style attrib
+type Status
+  = Correct
+  | OK
+  | Incorrect
+
+attemptStatus : Model -> Status
+attemptStatus model =
+  let
+    entry = entryById model.idx
+    actual = String.toLower (entryText entry)
+    attempt = String.toLower model.attempt
+  in
+    if attempt == actual then
+      Correct
+    else if String.startsWith attempt actual then
+      OK
+    else
+      Incorrect
+
+
+statusMessage : Status -> Html msg
+statusMessage status =
+  let
+    (cls, message) =
+      case status of
+        Correct ->
+          ("status text-correct", "Correct!")
+        OK ->
+          ("status text-ok", "OK so far ...")
+        Incorrect ->
+          ("status text-incorrect", "Incorrect")
+  in
+    div [ class cls ] [ text message ]
+
+inputArea : Status -> String -> Html Msg
+inputArea status txt =
+  let
+    (cls) =
+      case status of
+        Correct -> "border-correct"
+        OK -> "border-ok"
+        Incorrect -> "border-incorrect"
+  in
+    textarea
+      [ rows 4,
+        cols 80,
+        placeholder "Type verse here",
+        value txt,
+        onInput Attempt,
+        class cls
+      ] []
+
+counter : Status -> Model -> Html Msg
+counter status model =
+  let
+    entry = entryById model.idx
+    actual = entryText entry
+    attemptLen = toString (String.length model.attempt)
+    actualLen = toString (String.length actual)
+    txt = text (attemptLen ++ "/" ++ actualLen) -- twitter style counter
+
+    (cls) =
+      case status of
+        Correct -> "counter text-correct"
+        OK -> "counter text-ok"
+        Incorrect -> "counter text-incorrect"
+  in
+    div [ class cls ][ txt ]
+
 view : Model -> Html Msg
 view model =
   let
     entry = entryById model.idx
     verse = entryVerse entry
-    actual = entryText entry
+    status = attemptStatus model
     trans = entryTranslation entry
-    attemptLen = toString (String.length model.attempt)
-    actualLen = toString (String.length actual)
   in
     div [ class "container-fluid text-center main" ][
       div [ class "row"][
         div [ class "col-md-12" ][
           h1 [][ text "Memory Verses" ],
           h3 [][ text (verse ++ " " ++ trans)],
-          textarea [ rows 4, cols 80, placeholder "Type verse here",  value model.attempt, onInput Attempt ] [],
-          div [ class "counter" ][ text (attemptLen ++ "/" ++ actualLen) ], -- twitter style counter
-          viewValidation model,
+          inputArea status model.attempt,
+          counter status model,
+          statusMessage status,
           div [ class "inputs" ] [
             button [ onClick Back ] [ text "back" ],
             button [ onClick Next ] [ text "next" ],
-            a [ onClick Show ] [ text "show" ]
+            a [ onClick Show ] [ text "show" ],
+            a [ onClick Clear ] [ text "clear" ]
           ]
         ]
       ]
     ]
-
-viewValidation : Model -> Html msg
-viewValidation model =
-  let
-    actual = String.toLower (entryText (entryById model.idx))
-    attempt = String.toLower model.attempt
-    (cls, message) =
-      if attempt == actual then
-        ("status text-success", "Correct!")
-      else if String.startsWith attempt actual then
-        ("status text-ok", "OK so far ...")
-      else
-        ("status text-danger", "Incorrect")
-  in
-    div [ class cls ] [ text message ]
