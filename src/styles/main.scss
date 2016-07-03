@@ -1,0 +1,45 @@
+@import url(https://fonts.googleapis.com/css?family=Lato);
+
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
+@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+
+// can add Boostrap overrides, additional Sass/CSS below...
+$correct: $brand-success;
+$ok: $gray-light;
+$incorrect: $brand-danger;
+
+.main {
+  h1, textarea { margin: 20px 0px; }
+  button { margin: 0 5px; }
+  a { margin-left: 10px; cursor: pointer; }
+  textarea {
+    padding: 10px;
+    margin: 10px 0px 0px 0px;
+
+    &:focus {
+      &.border-correct {
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 15px $correct;
+        outline: 0;
+      }
+      &.border-incorrect {
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 15px $incorrect;
+        outline: 0;
+      }
+    }
+  }
+  .gray { color: $gray-light; }
+  .status { font-size: 16px; }
+  .inputs { margin-top: 20px; }
+  .text-correct { color: $correct; }
+  .text-ok { color: $ok; }
+  .text-incorrect { color: $incorrect; }
+  .border-correct { border: 1px solid $correct; }
+  .border-ok { border: 1px solid $ok; }
+  .border-incorrect { border: 1px solid $incorrect; }
+  .counter { margin-bottom: 10px; }
+}
+
+@media (max-width: 768px) {
+  textarea { width: 300px; height: 150px; }
+}
