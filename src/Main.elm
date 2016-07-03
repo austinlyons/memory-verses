@@ -3,7 +3,7 @@ import Html.Attributes exposing (..)
 import Html.App as Html
 import Html.Events exposing ( onClick, onInput )
 import String
-import Verses exposing ( versesCount, entryText, entryVerse, entryById, entryTranslation )
+import Verses exposing ( versesCount, entryText, entryVerse, entryById, entryTranslation, entryCategory )
 
 -- APP
 main : Program Never
@@ -133,12 +133,14 @@ view model =
     verse = entryVerse entry
     status = attemptStatus model
     trans = entryTranslation entry
+    category = entryCategory entry
   in
     div [ class "container-fluid text-center main" ][
       div [ class "row"][
         div [ class "col-md-12" ][
           h1 [][ text "Memory Verses" ],
           h3 [][ text (verse ++ " " ++ trans)],
+          h5 [ class "gray" ][ text (String.toUpper category)],
           inputArea status model.attempt,
           counter status model,
           statusMessage status,
