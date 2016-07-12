@@ -5,10 +5,7 @@ import Html.Attributes exposing (..)
 import Html.App as Html
 import Html.Events exposing (onClick, onInput)
 import String
-import Verses exposing (versesCount, entryById)
-
-
--- APP
+import Verses exposing (Entry, entryById)
 
 
 main : Program Never
@@ -16,21 +13,13 @@ main =
     Html.beginnerProgram { model = model, view = view, update = update }
 
 
-
--- MODEL
-
-
 type alias Model =
-    { attempt : String, idx : Int }
+    { attempt : String, entry : Entry, idx : Int }
 
 
 model : Model
 model =
-    Model "" 0
-
-
-
--- UPDATE
+    Model "" (entryById 0) 0
 
 
 type Msg
@@ -44,28 +33,35 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     let
+        -- write to console.log (just for reference on how this works)
         _ =
             Debug.log "model" model
-
-        -- write to console.log
     in
         case msg of
             Attempt attempt ->
                 { model | attempt = attempt }
 
             Next ->
-                { model
-                    | idx = (model.idx + 1) % versesCount
-                    , attempt =
-                        ""
-                        -- clear textarea
-                }
+                let
+                    i =
+                        (model.idx + 1)
+                in
+                    { model
+                        | idx = i
+                        , entry = entryById i
+                        , attempt = ""
+                    }
 
             Back ->
-                { model
-                    | idx = (model.idx - 1) % versesCount
-                    , attempt = ""
-                }
+                let
+                    i =
+                        (model.idx - 1)
+                in
+                    { model
+                        | idx = i
+                        , entry = entryById i
+                        , attempt = ""
+                    }
 
             Show ->
                 { model
@@ -92,7 +88,7 @@ attemptStatus : Model -> Status
 attemptStatus model =
     let
         entry =
-            entryById model.idx
+            model.entry
 
         actual =
             String.toLower entry.text
@@ -154,7 +150,7 @@ counter : Status -> Model -> Html Msg
 counter status model =
     let
         entry =
-            entryById model.idx
+            model.entry
 
         attemptLen =
             toString (String.length model.attempt)
@@ -162,10 +158,10 @@ counter status model =
         actualLen =
             toString (String.length entry.text)
 
+        -- twitter style counter
         txt =
             text (attemptLen ++ "/" ++ actualLen)
 
-        -- twitter style counter
         cls =
             case status of
                 Correct ->
@@ -184,7 +180,7 @@ view : Model -> Html Msg
 view model =
     let
         entry =
-            entryById model.idx
+            model.entry
 
         status =
             attemptStatus model

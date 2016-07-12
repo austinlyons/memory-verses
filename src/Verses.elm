@@ -1,4 +1,4 @@
-module Verses exposing (versesCount, entryById)
+module Verses exposing (Entry, entryById)
 
 import Dict
 import Maybe
@@ -29,7 +29,7 @@ versesList =
 
 
 
--- look up table (integer indexed dictionary)
+-- verses is a look up table (integer indexed dictionary)
 
 
 verses : Dict.Dict Int Entry
@@ -44,4 +44,4 @@ versesCount =
 
 entryById : Int -> Entry
 entryById idx =
-    Maybe.withDefault nullEntry (Dict.get idx verses)
+    Maybe.withDefault nullEntry (Dict.get (idx % versesCount) verses)
