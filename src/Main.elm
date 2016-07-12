@@ -195,8 +195,8 @@ view model =
                     , counter status model
                     , statusMessage status
                     , div [ class "inputs" ]
-                        [ button [ onClick Back ] [ text "back" ]
-                        , button [ onClick Next ] [ text "next" ]
+                        [ button [ onClick Back, class "btn btn-primary" ] [ text "back" ]
+                        , button [ onClick Next, class "btn btn-primary" ] [ text "next" ]
                         , a [ onClick Show ] [ text "show" ]
                         , a [ onClick Clear ] [ text "clear" ]
                         ]
