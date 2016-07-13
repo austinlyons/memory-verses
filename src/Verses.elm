@@ -25,6 +25,7 @@ versesList =
     , ( 4, Entry "Romans" "8:1" "There is therefore now no condemnation for those who are in Christ Jesus" "ESV" "salvation" )
     , ( 5, Entry "Deuteronomy" "6:5" "Love the Lord your God with all your heart and with all your soul and with all your strength" "ESV" "commandments" )
     , ( 6, Entry "Deuteronomy" "6:6-7" "And these words that I command you today shall be on your heart. You shall teach them diligently to your children, and shall talk of them when you sit in your house, and when you walk by the way, and when you lie down, and when you rise" "ESV" "parenting" )
+    , ( 7, Entry "Romans" "8:18" "For I consider that the sufferings of this present time are not worth comparing with the glory that is to be revealed to us" "ESV" "suffering" )
     ]
 
 
