@@ -189,7 +189,7 @@ view model =
             [ div [ class "row" ]
                 [ div [ class "col-md-12" ]
                     [ h1 [] [ text "Memory Verses" ]
-                    , h3 [] [ text (entry.verse ++ " " ++ entry.translation) ]
+                    , h3 [] [ text (entry.book ++ " " ++ entry.verse ++ " " ++ entry.translation) ]
                     , h5 [ class "gray" ] [ text (String.toUpper entry.category) ]
                     , inputArea status model.attempt
                     , counter status model
